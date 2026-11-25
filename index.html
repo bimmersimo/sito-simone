@@ -292,6 +292,11 @@ html.has-cur,html.has-cur *{cursor:none!important}
 .crew .r b{font-weight:600!important;font-size:clamp(16px,1.35vw,20px);line-height:1.25;letter-spacing:-.005em}
 .stills{max-width:1500px;margin:clamp(56px,10vh,110px) auto 0;padding:0 var(--gut)}
 .stills .ct2{color:var(--acc);margin-bottom:clamp(14px,2.4vh,24px)}
+.gg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+.gg figure{margin:0;overflow:hidden;background:#111;aspect-ratio:16/9;opacity:0;transform:translateY(22px) scale(.98);animation:rise .9s var(--ease) both}
+.gg img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.gg figure:hover img{transform:scale(1.04)}
+@media(max-width:700px){.gg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .sg{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}
 .sg figure{margin:0;overflow:hidden;background:#111;aspect-ratio:16/9;grid-column:span 2;opacity:0;transform:translateY(22px) scale(.98);animation:rise .9s var(--ease) both}
 .sg figure:nth-child(1){grid-column:span 4;grid-row:span 2;aspect-ratio:auto}
@@ -395,6 +400,7 @@ html.has-cur,html.has-cur *{cursor:none!important}
     <div class="crew" id="pCrewBox"><div class="ct2 mono">Credits</div><div id="pCrew"></div></div>
   </div>
   <div class="stills" id="pStills" hidden><div class="ct2 mono">Frames</div><div class="sg" id="sg"></div></div>
+  <div class="stills" id="pGifs" hidden><div class="ct2 mono">Motion</div><div class="gg" id="gg"></div></div>
 </div>
 
 <div id="sp"></div>
@@ -519,6 +525,8 @@ function buildStills(p){const tok=++stillTok,box=$('#pStills'),g=$('#sg');g.inne
    await new Promise(res=>{const t=setTimeout(res,4000);v.addEventListener('seeked',()=>{clearTimeout(t);res()},{once:true});v.currentTime=d*fr[i]});
    try{x.drawImage(v,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));if(b)add(URL.createObjectURL(b),i)}catch(e){return}}
   v.removeAttribute('src');v.load()},{once:true})}
+function buildGifs(p){const box=$('#pGifs'),g=$('#gg');g.innerHTML='';box.hidden=true;const l=(p.gifs||[]).filter(x=>typeof x==='string'&&x);if(!l.length)return;
+ l.forEach((src,i)=>{const f=document.createElement('figure');f.style.animationDelay=(.3+i*.09)+'s';const im=document.createElement('img');im.src=src;im.alt='';im.loading='lazy';im.decoding='async';f.appendChild(im);g.appendChild(f)});box.hidden=false}
 function openProject(idx){
  const p=P[idx];curIdx=idx;
  $('#pCt').textContent=pad(idx+1)+' / '+pad(P.length);
@@ -538,7 +546,7 @@ function openProject(idx){
  else pl.innerHTML=`<div class="g" style="background:${bg(p.thumb,p.hue)}"></div><span class="mono">Full video coming soon</span>`;
  const cr=$('#pCrew');cr.innerHTML='';const crew=(p.crew||[]).filter(([r,nm])=>nm&&!/^[—–-]+$/.test(String(nm).trim()));
  crew.forEach(([r,nm],i)=>{const d=document.createElement('div');d.className='r';d.style.animationDelay=(.25+i*.04)+'s';d.innerHTML='<span></span><b></b>';d.children[0].textContent=r;d.children[1].textContent=nm;cr.appendChild(d)});$('#pCrewBox').hidden=!crew.length;
- buildStills(p);
+ buildStills(p);buildGifs(p);
  proj.scrollTop=0;proj.classList.add('open');proj.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function stopPlayer(){const pl=$('#player');if(!pl)return;pl.querySelectorAll('video,audio').forEach(v=>{try{v.pause();v.removeAttribute('src');v.load()}catch(e){}});pl.innerHTML='';pl.classList.remove('on')}
 function route(){const idx=P.findIndex(x=>x.id===location.hash.slice(1));
