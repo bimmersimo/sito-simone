@@ -434,7 +434,7 @@ const P=[
  {id:"intrend",t:"Intrend – Style With No Limits",c:"Fashion",y:"2023",hue:210,d:"A fast-paced fashion campaign shot in natural light and backlight.",crew:[["Agency","Garage Raw"],["Director","Simone Benetazzo"],["Art Director","Pier Giulio Caivano"],["1AC","Luca Perin"],["Electrician","Cristiano Verardo"]]},
  {id:"mazzer-champion",t:"Mazzer – Brew Filter Coffee Like a Champion",c:"ADV / Food & Beverage",y:"2023",hue:35,d:"Filter coffee told through macro, steam and attention to detail.",crew:[["Director","Alessandro Carlozzo"],["Director of Photography","Simone Benetazzo"],["Electrician","Gabriele Dal Colle"],["Sound","Tommaso Dugato"]]}
 ];
-if(window.SITE&&SITE.projects&&SITE.projects.length){P.length=0;SITE.projects.forEach(p=>P.push(Object.assign({hue:200,crew:[],d:'',video:'',file:''},p)))}
+if(window.SITE&&SITE.projects&&(SITE.projects.length||SITE.managed)){P.length=0;SITE.projects.forEach(p=>P.push(Object.assign({hue:200,crew:[],d:'',video:'',file:''},p)))}
 const $=s=>document.querySelector(s);
 const pad=(n,l=2)=>String(n).padStart(l,'0');
 const split=t=>{const m=t.split(/\s[–—-]\s/);return[m[0],m.slice(1).join(' · ')]};
@@ -594,7 +594,7 @@ route();
 /* ===== striscia foto Light Tech (neri = segnaposto; metti src per sostituirli) ===== */
 (function(){
  const PH0=[{ar:1.5},{ar:.8},{ar:1.78},{ar:1},{ar:.8},{ar:1.5},{ar:1.25},{ar:.8}]; /* src:"foto.jpg" */
- const PH=(window.SITE&&SITE.photos&&SITE.photos.length)?SITE.photos.map(p=>({src:p.src,ar:p.ar||1.5,title:p.title,credits:p.credits})):PH0;
+ const PH=(window.SITE&&SITE.photos&&(SITE.photos.length||SITE.managed))?SITE.photos.map(p=>({src:p.src,ar:p.ar||1.5,title:p.title,credits:p.credits})):PH0;
  const sec=document.getElementById('strip'),track=document.getElementById('track'),bar=document.getElementById('sprog');
  PH.forEach((p,i)=>{const d=document.createElement('figure');d.className='sph';d.style.setProperty('--ar',p.ar);
   const fr=document.createElement('div');fr.className='fr';
