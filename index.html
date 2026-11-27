@@ -489,7 +489,7 @@ function mkTile(p,i){
  a.querySelector('.im').style.background=bg(p.thumb,p.hue);
  const[c,t]=split(p.t);a.querySelector('.ov-a').textContent=c;
  const ot=a.querySelector('.ov-t');if(t)ot.textContent=t;else ot.remove();
- a.querySelector('.ov-m').remove();
+ {const om=a.querySelector('.ov-m');if(p.c)om.textContent=p.c;else om.remove()}
  let v=null;
  if(p.video||p.file){v=document.createElement('video');v.src=p.video||p.file;v.muted=true;v.loop=true;v.playsInline=true;v.preload='metadata';a.insertBefore(v,a.querySelector('.pi'));
   a.addEventListener('mouseenter',()=>v.play().catch(()=>{}));a.addEventListener('mouseleave',()=>v.pause())}
@@ -532,7 +532,7 @@ function buildGifs(p){const box=$('#pGifs'),g=$('#gg');g.innerHTML='';box.hidden
 function openProject(idx){
  const p=P[idx];curIdx=idx;
  $('#pCt').textContent=pad(idx+1)+' / '+pad(P.length);
- $('#pCat').hidden=true;setTitle($('#pTitle'),p.t);
+ {const pc=$('#pCat');pc.textContent=p.c||'';pc.hidden=!p.c}setTitle($('#pTitle'),p.t);
  const pl=$('#player');
  if(p.file){pl.innerHTML=`<video controls playsinline preload="metadata" poster="" src=""></video>`;const v=pl.querySelector('video');v.src=p.file;if(p.thumb)v.poster=p.thumb;v.autoplay=true}
  else if(p.yt||p.vimeo){pl.innerHTML='';const yt=!!p.yt;
